@@ -1,0 +1,726 @@
+databases homework just saving it so that it does not go anywhere
+
+
+
+use GOLDSHOP;
+
+
+
+
+----------droping table-----------------------
+DROP TABLE if exists Customers;
+DROP TABLE if exists Products;
+DROP TABLE if exists Suppliers;
+DROP TABLE if exists Employees;
+DROP TABLE if exists Sale;
+Drop TABLE if exists SaleItems;
+DROP TABLE if exists GoldInventory;
+DROP TABLE if exists Orders;
+DROP TABLE if exists OrderItems;
+DROP TABLE if exists Payments;
+
+
+-------------creates tables------------------
+
+-- CREATES THE COSUTMERS TABLE
+CREATE TABLE Customers(
+	CustomerID int primary key identity(1,1),
+	FirstName VARCHAR(50)not null,
+	LastName VARCHAR(50)not null,
+	Phone VARCHAR(15)not null,
+	Email VARCHAR(100)not null,
+	Address VARCHAR(255) not null
+	);
+	
+
+
+	-- CREATES THE PRODUCTS TABLE 
+CREATE TABLE Products(
+	ProductID int primary key identity(50,1),
+	Name VARCHAR(255) not null, 
+	Type VARCHAR(100) not null,
+	Weight Decimal(38,2) not null,
+	Purity Decimal(38,2) not null,
+	Price Decimal(38,2) not null
+	);
+	-- creates a table for suppliers
+CREATE TABLE Suppliers(
+	SupplierID int primary key identity(1,1),
+	SupplierName VARCHAR(100) not null,
+	ContactPerson VARCHAR(100) not null,
+	Phone VARCHAR(15) not null,
+	Address VARCHAR(100)not null
+	);
+
+	-- CREATES THE EMPLOYEES TABLE 
+CREATE TABLE Employees(
+	EmployeeID int primary key identity(1,1),
+	FirstName VARCHAR(25) not null,
+	LastName VARCHAR(25) not null,
+	Position VARCHAR(50) not null,
+	Salary INT not null,
+	HireDate Date not null
+);
+
+-- CREATES THE SALES TABLE 
+CREATE TABLE Sale (
+    SaleID int primary key,
+    SaleDate date not null,
+    TotalAmount int not null,
+    CustomerID int not null,
+    EmployeeID int not null,
+    FOREIGN KEY (CustomerID)REFERENCES Customers(CustomerID) ON DELETE CASCADE,
+	);
+INSERT INTO Sale (SaleID,SaleDate,CustomerID, TotalAmount,EmployeeID) 
+VALUES 
+    (1,'2024-01-10',1, 1000,1);
+   
+
+
+
+-- CREATES THE SALEITEMS TABLE
+CREATE TABLE SaleItems(
+	SaleItemID int primary key identity(1,1),
+	SaleID int not null,
+	ProductID int not null,
+	FOREIGN KEY (SaleID)  REFERENCES Sales(SaleID) ON DELETE CASCADE,
+	FOREIGN KEY (ProductID)  REFERENCES Products(ProductID) ON DELETE CASCADE,
+	Quantity int not null,
+	PriceAtSale int not null
+);
+
+-- CREATES THE STOCK TABLE 
+CREATE TABLE GoldInventory(
+	StockID int primary key identity(1,1),
+	ProductID int not null,
+	FOREIGN KEY (ProductID)  REFERENCES Products(ProductID) ON DELETE CASCADE,
+	Quantity int not null
+);
+
+
+-- CREATES THE ORDER TABLE
+CREATE TABLE Orders (
+    OrderID int primary key identity(1,1),
+    OrderDate date not null,
+    CustomerID int not null,         
+    EmployeeID int not null,        
+    SupplierID int not null,         
+    FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID) ON DELETE CASCADE,
+    FOREIGN KEY (EmployeeID) REFERENCES Employees(EmployeeID) ON DELETE CASCADE,
+    FOREIGN KEY (SupplierID) REFERENCES Suppliers(SupplierID) ON DELETE CASCADE
+);
+
+-- CREATESS THE ORDERITEMS TABLE 
+CREATE TABLE OrderItems (
+    OrderItemID int primary key identity(1,1),
+    OrderID int not null,
+    ProductID int not null,
+    Quantity int not null,
+    PriceAtOrder DECIMAL(10, 2),
+	FOREIGN KEY (OrderID) REFERENCES Orders(OrderID) ON DELETE CASCADE, 
+    FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
+);
+
+-- Create Payments Table
+CREATE TABLE Payments (
+    PaymentID int primary key identity(1,1),
+    SaleID int not null,
+    PaymentDate DATE not null,
+    AmountPaid DECIMAL(10, 2),
+    PaymentMethod VARCHAR(50) not null,
+    FOREIGN KEY (SaleID) REFERENCES Sales(SaleID) ON DELETE CASCADE
+);
+
+-------------------------INSERTING---------------------------------------------
+
+INSERT INTO Customers (CustomerID,FirstName, LastName, Phone, Email, Address) 
+VALUES 
+    (1,'laith', 'haj', '123456789', 'laith@example.com', '123 Gold St.'),
+   (2,'youssef','haj','234567890','youssef@example.com','123 zorilor'),
+   (3,'waleed','kanama','345678901','waleed@example.com','123 motilor'),
+   (4,'esmaiel','haj','4567890123','esmaiel@example.com','123 platinia');
+
+
+INSERT INTO Products (Name, Type, Weight, Purity, Price) 
+VALUES
+  ('Gold Bracelet', 'India', 50.00, 99.9, 500.00),
+  ('Silver Ring', 'Turkey', 10.00, 92.5, 200.00),
+  ('Diamond Necklace', 'United Arab Emirates', 5.00, 100.0, 3000.00),
+  ('Platinum Earrings', 'Romania', 2.50, 95.0, 800.00),
+  ('Ruby Pendant', 'Saudi Arabia', 1.20, 80.0, 1200.00),
+  ('Gold Chain', 'Indonesia', 15.00, 99.9, 1500.00),
+  ('Emerald Ring', 'Colombia', 0.75, 90.0, 750.00),
+  ('Sapphire Brooch', 'Sri Lanka', 1.00, 88.0, 650.00),
+  ('Pearl Necklace', 'Japan', 12.50, 85.0, 950.00),
+  ('Silver Bracelet', 'Mexico', 8.00, 92.5, 180.00),
+  ('Gold Ring', 'Philippines', 2.00, 99.9, 500.00),
+  ('Diamond Ring', 'South Africa', 0.50, 100.0, 5000.00),
+  ('Platinum Necklace', 'Canada', 10.00, 95.0, 4000.00),
+  ('Silver Earrings', 'Thailand', 1.50, 92.5, 120.00),
+  ('Emerald Pendant', 'Brazil', 2.50, 90.0, 900.00),
+  ('Gold Anklet', 'Bangladesh', 5.50, 99.9, 300.00),
+  ('Ruby Bracelet', 'Russia', 3.00, 80.0, 850.00),
+  ('Diamond Brooch', 'United Kingdom', 1.20, 100.0, 2750.00),
+  ('Sapphire Ring', 'Australia', 0.80, 88.0, 600.00),
+  ('Platinum Ring', 'Italy', 1.10, 95.0, 1500.00),
+  ('Gold Necklace', 'Ghana', 8.00, 99.9, 3000.00),
+  ('Silver Chain', 'Spain', 6.00, 92.5, 200.00),
+  ('Emerald Earrings', 'Zambia', 0.60, 90.0, 700.00),
+  ('Ruby Ring', 'India', 0.70, 80.0, 550.00),
+  ('Gold Brooch', 'Italy', 1.40, 99.9, 750.00),
+  ('Pearl Ring', 'Vietnam', 0.40, 85.0, 300.00),
+  ('Platinum Bracelet', 'South Korea', 4.50, 95.0, 1200.00),
+  ('Sapphire Necklace', 'Madagascar', 7.00, 88.0, 1500.00),
+  ('Silver Pendant', 'Portugal', 3.20, 92.5, 220.00),
+  ('Diamond Anklet', 'China', 2.50, 100.0, 2000.00),
+  ('Emerald Brooch', 'Peru', 1.80, 90.0, 850.00),
+  ('Ruby Earrings', 'Mexico', 1.00, 80.0, 450.00),
+  ('Gold Pendant', 'Philippines', 4.00, 99.9, 700.00),
+  ('Platinum Anklet', 'Singapore', 6.20, 95.0, 1300.00),
+  ('Silver Brooch', 'Norway', 2.00, 92.5, 180.00),
+  ('Sapphire Bracelet', 'Malaysia', 3.30, 88.0, 900.00),
+  ('Emerald Chain', 'Nigeria', 9.00, 90.0, 1100.00),
+  ('Diamond Pendant', 'Syria', 0.90, 100.0, 5500.00),
+  ('Gold Earrings', 'South Africa', 1.60, 99.9, 400.00),
+  ('Ruby Necklace', 'Egypt', 6.50, 80.0, 2500.00),
+  ('Silver Anklet', 'Ireland', 4.10, 92.5, 130.00),
+  ('Gold Chain Bracelet', 'Japan', 7.80, 99.9, 950.00),
+  ('Pearl Earrings', 'Fiji', 1.00, 85.0, 320.00),
+  ('Diamond Chain', 'Tanzania', 11.00, 100.0, 6000.00),
+  ('Emerald Necklace', 'Chile', 7.50, 90.0, 1800.00),
+  ('Sapphire Pendant', 'Honduras', 1.90, 88.0, 750.00),
+  ('Ruby Chain', 'Oman', 8.60, 80.0, 1600.00),
+  ('Gold Anklet Charm', 'Ethiopia', 3.30, 99.9, 560.00),
+  ('Platinum Brooch', 'Sweden', 1.20, 95.0, 1000.00),
+  ('Silver Earrings Set', 'Colombia', 2.70, 92.5, 290.00);
+
+
+
+
+
+INSERT INTO Suppliers (SupplierName, ContactPerson, Phone, Address) 
+VALUES 
+    ('GoldSource', 'Emma Brown', '987654321', '456 Silver Rd.'),
+    ('SilverMine Co', 'John Black', '876543210', '654 Gem St.'),
+    ('PreciousPlatinum', 'Olivia Green', '765432109', '321 Precious Ln.'),
+    ('DiamondHouse', 'Lucas Gray', '654321098', '789 Sparkle Ave.');
+
+
+
+
+INSERT INTO Employees (FirstName, LastName, Position, Salary, HireDate) 
+VALUES 
+    ('MOHAMMED', 'AHMED', 'Sales Manager', 60000, '2022-03-15'),
+    ('JAFAR', 'IBRAHIM', 'Cashier', 35000, '2021-07-01'),
+    ('ESMAIEL', 'DAHAM', 'Inventory Specialist', 45000, '2023-02-20'),
+    ('BASSAM', 'ISMAIEL', 'Sales Associate', 40000, '2023-01-10');
+
+	
+
+INSERT INTO Sales (SaleID,SaleDate,CustomerID, TotalAmount, EmployeeID) 
+VALUES 
+    (1,'2024-01-10',1, 1000,  1);
+   
+
+
+
+
+INSERT INTO SaleItems (SaleID, ProductID, Quantity, PriceAtSale) 
+VALUES 
+    (1, 1, 2, 500),
+    (1, 2, 1, 200),
+    (2, 3, 1, 800),
+    (3, 4, 3, 300);
+
+
+
+
+
+
+INSERT INTO GoldInventory (ProductID, Quantity) 
+VALUES 
+    (1, 10),
+    (2, 20),
+    (3, 15),
+    (4, 5);
+
+
+
+
+
+
+INSERT INTO Orders (OrderDate, CustomerID, SupplierID, EmployeeID)
+VALUES 
+    ('2023-05-10', 1, 1, 1),
+    ('2023-06-15', 2, 2, 2),
+    ('2023-07-20', 3, 3, 3),
+    ('2023-08-25', 4, 4, 4);
+
+
+
+
+
+INSERT INTO OrderItems (OrderID, ProductID, Quantity, PriceAtOrder) 
+VALUES 
+    (1, 1, 5, 450.00),
+    (2, 2, 10, 180.00),
+    (3, 3, 2, 750.00),
+    (4, 4, 4, 280.00);
+
+
+
+
+
+
+INSERT INTO Payments (SaleID, PaymentDate, AmountPaid, PaymentMethod) 
+VALUES 
+    (1, '2024-01-11', 1000, 'Credit Card'),
+    (2, '2024-02-16', 1500, 'Cash'),
+    (3, '2024-03-06', 800, 'Debit Card'),
+    (4, '2024-03-21', 1200, 'Bank Transfer');
+
+				
+
+SELECT *FROM Customers;
+SELECT *FROM Products;
+SELECT *FROM Suppliers;
+SELECT *FROM Employees;
+SELECT *FROM Sale;
+SELECT *FROM SaleItems;
+SELECT *FROM GoldInventory;
+SELECT *FROM Orders;
+SELECT *FROM OrderItems;
+SELECT *FROM Payments;
+
+---------------------DELETE--------------------
+
+DELETE FROM Customers;
+DELETE FROM Products;
+DELETE FROM Suppliers;
+DELETE FROM Employees;
+DELETE FROM Sales;
+DELETE FROM SaleItems;
+DELETE FROM GoldInventory;
+DELETE FROM Orders;
+DELETE FROM OrderItems;
+DELETE FROM Payments;
+
+
+
+
+------------------------UPDATE-------------------------
+
+
+UPDATE Products
+SET Type = 'SYRIA'
+WHERE ProductID	= 156;
+
+UPDATE Suppliers
+SET SupplierName = 'RMIZAN'
+WHERE SupplierID = 4 AND
+ContactPerson = 'Lucas Gray';
+
+UPDATE Payments
+SET PaymentDate = '2024-02-19'
+WHERE PaymentID < 3;
+
+
+
+
+---------------DELETE-----------------------
+
+DELETE from Customers where CustomerID = 6
+DELETE from Customers where CustomerID = 7
+DELETE from Customers where CustomerID = 8
+DELETE from Customers where CustomerID = 9 
+DELETE from Customers where CustomerID = 10
+DELETE FROM Products where ProductID = 201 AND Price = 500.00
+
+
+-----------------A-------------------------
+--2 queries with the union operation; use UNION [ALL] and OR;
+
+SELECT ProductID
+FROM Products
+where ProductID = 467
+UNION ALL
+SELECT Purity
+FROM Products
+where Purity = 100.0;
+
+
+UPDATE Customers
+SET Phone = '987123455'
+WHERE FirstName = 'youssef' OR Email = 'youssef@example.com';
+
+------------------------------B---------------------------
+--2 queries with the intersection operation; use INTERSECT and IN;
+
+SELECT ProductID 
+FROM Products
+WHERE ProductID = 12
+INTERSECT
+SELECT purity
+FROM Products
+where Purity = 100.0;
+
+
+select Price
+From Products
+WHERE Price IN (select Price FROM Products where Price >100.00);
+
+
+------------------------------C----------------------------
+--2 queries with the difference operation; use EXCEPT and NOT IN;
+
+SELECT *FROM Products
+WHERE ProductID NOT IN(SELECT ProductID FROM GoldInventory);
+
+SELECT Name
+FROM Products
+EXCEPT
+SELECT Name
+FROM Products
+WHERE ProductID >5;
+
+------------------------d--------------------------------------
+
+
+--4 queries with INNER JOIN, LEFT JOIN, RIGHT JOIN, and FULL JOIN (one query per operator);
+--one query will join at least 3 tables, while another one will join at least two many-to-many relationships;
+
+SELECT SaleItems.PriceAtSale
+FROM SaleItems
+INNER JOIN Products ON SaleItems.ProductID = Products.ProductID;
+
+
+SELECT Sales.SaleID, Sales.SaleDate, Customers.FirstName, Customers.LastName, Sales.TotalAmount
+FROM Sales
+INNER JOIN Customers ON Sales.CustomerID = Customers.CustomerID;
+
+
+
+SELECT  SaleItems.Quantity, SaleItems.PriceAtSale, Products.Name
+FROM SaleItems
+INNER JOIN Products ON SaleItems.ProductID = Products.ProductID;
+
+
+SELECT Products.ProductID, Products.Name, GoldInventory.Quantity
+FROM Products
+LEFT JOIN GoldInventory ON Products.ProductID = GoldInventory.ProductID;
+
+
+
+SELECT SaleItems.SaleItemID, SaleItems.Quantity, SaleItems.PriceAtSale, Sales.SaleID, Sales.SaleDate
+FROM SaleItems
+RIGHT JOIN Sales ON SaleItems.SaleID = Sales.SaleID;
+
+
+
+
+----------------------------E---------------------------
+
+
+--2 queries with the IN operator and a subquery in the WHERE clause; in at least one case, the subquery must include a subquery in its own WHERE clause;
+
+
+SELECT Price
+FROM Products
+where Price IN (500.00,180.00);
+
+
+SELECT SaleID
+FROM Sales 
+WHERE SaleID IN (
+    SELECT SaleID
+    FROM SaleItems 
+    WHERE ProductID IN (
+        SELECT ProductID
+        FROM GoldInventory
+        WHERE Quantity > 5
+    )
+);
+
+
+
+---------------------F-----------------
+
+
+SELECT saleID
+FROM Sales
+WHERE EXISTS (SELECT PriceAtSale FROM SaleItems WHERE PriceAtSale < 400.00); -- it is going to return true(all the table values)
+
+ ---and it will check if the quantity wass more than 5 and the products id from the products table was equal to the product id from the saleitems table 
+SELECT ProductID, Name, Type, Price
+FROM Products
+WHERE Name LIKE 'M%' 
+  AND EXISTS (
+      SELECT SaleID,SaleItemID
+      FROM SaleItems
+      WHERE SaleItems.ProductID = Products.ProductID
+        AND SaleItems.Quantity > 5
+  );
+
+
+
+---------------G---------------------
+
+------ GET ALL SALES WITH THE SPECIFIC PERIOD 
+SELECT C.* 
+FROM Customers C
+INNER JOIN 
+    (SELECT * 
+    FROM Sales 
+    WHERE SaleDate BETWEEN '2024-01-10' AND '2024-02-15') AS X
+ON C.CustomerID = X.CustomerID;
+
+
+
+
+SELECT C.* 
+FROM Customers C
+INNER JOIN 
+    (SELECT * 
+    FROM Orders 
+    WHERE OrderDate = '2023-06-01' OR OrderDate = '2023-07-01') AS X
+ON C.CustomerID = X.CustomerID;
+
+
+------------------h-----------------------
+----- it counts the total orders for each customer and couts number of orders
+SELECT CustomerID, COUNT(OrderID) AS TotalOrders
+FROM Orders
+GROUP BY CustomerID
+HAVING COUNT(OrderID) > 5;
+
+
+----- this calculates the total sales for each customer and filters  who have a total amount greater than the average amount for all customers
+SELECT CustomerID, SUM(TotalAmount) AS TotalSales
+FROM Sales
+GROUP BY CustomerID
+HAVING SUM(TotalAmount) > (SELECT AVG(TotalAmount) FROM Sales);
+
+
+
+-------the average sales amount for each customer 
+SELECT CustomerID, AVG(TotalAmount) AS AvgSalePrice
+FROM Sales
+GROUP BY CustomerID
+HAVING AVG(TotalAmount) > (SELECT AVG(TotalAmount) FROM Sales);
+
+
+-------get the min and max	sale quantities
+SELECT ProductID, MIN(Quantity) AS MinQuantity, MAX(Quantity) AS MaxQuantity
+FROM SaleItems
+GROUP BY ProductID
+HAVING MAX(Quantity) > 20;
+
+
+--------------I------------------
+
+-- any of the values that are correct 
+------- this query will return customers whose totals purchase amount is greater than the min total purchase
+SELECT CustomerID, SUM(TotalAmount) AS TotalSpent
+FROM Sales
+GROUP BY CustomerID
+HAVING SUM(TotalAmount) > ANY (SELECT MIN(TotalAmount) FROM Sales);
+
+
+
+------- customers who have purchased with a total amount that is greater than 50
+SELECT CustomerID, TotalAmount
+FROM Sales
+WHERE TotalAmount > ANY (SELECT TotalAmount FROM Sales WHERE TotalAmount > 50);
+
+
+------- all means that all values have to be true when everything is true within the range 
+----- will reutrn the customers that have spent more than all sales amount
+SELECT CustomerID, SUM(TotalAmount) AS TotalSpent
+FROM Sales
+GROUP BY CustomerID
+HAVING SUM(TotalAmount) > ALL (SELECT TotalAmount FROM Sales);
+
+
+---- will return customers purchases amount is in the lists of amounts that are greater than all sales amounts 
+SELECT CustomerID, TotalAmount
+FROM Sales
+WHERE TotalAmount > ALL (SELECT TotalAmount FROM Sales WHERE TotalAmount > 50);
+
+--- example if  the largest sale amount above 50 is 200  then it will return sales that are greater than 200 
+
+
+
+--------- avg- this will take tha couloumn that you chose and sum it up  (add all the coloumns)
+---- example you have table with 5 quantities and avg will sum all the 5 quantities
+---------- count- it will just count how many coloums you have in the table 
+-------for example you have 16 orderID's the count will return the number 16
+
+
+
+
+
+---- changing the first id and first name 
+CREATE PROCEDURE ModifyColoumnType
+AS
+BEGIN
+ALTER TABLE Products
+ALTER Column Price DECIMAL(38,2);
+end;
+exec ModifyColoumnType;
+
+---- converting from decimal into integer without فواصل
+
+CREATE PROCEDURE RevertColumnType
+AS
+BEGIN
+ALTER TABLE Products
+ALTER Column Price INT;
+END;
+exec RevertColumnType;
+
+-- ADDING A NEW COLUMN
+CREATE PROCEDURE AddPhone
+AS
+BEGIN
+ALTER TABLE Products
+ADD Phone VARCHAR(15);
+END;
+
+EXEC Addphone;
+
+--- REMOVING THE COLUMN OF PHONE
+CREATE PROCEDURE RemoveAddColumn
+AS 
+BEGIN
+ALTER TABLE Products
+DROP COLUMN Phone;
+END;
+
+EXEC RemoveAddColumn;
+
+
+--- ADDING CONSTRAINT WHICH HAS THE VALUE OF 0
+CREATE PROCEDURE AddDefaultConstraint
+AS 
+BEGIN
+ALTER TABLE Products
+ADD CONSTRAINT DFPrice DEFAULT 0 FOR Price;
+END;
+
+EXEC AddDefaultConstraint;
+
+--- REMOVING CONSTRAINT THAT WE ADDED
+CREATE PROCEDURE RemoveDefaultConstraint
+AS
+BEGIN
+ALTER TABLE Products
+DROP CONSTRAINT DFPrice;
+END;
+EXEC RemoveDefaultConstraint;
+
+
+
+
+
+CREATE PROCEDURE AddPrimaryKey
+AS
+BEGIN
+ALTER TABLE Customers
+ADD CONSTRAINT PKCustomerID PRIMARY KEY(CustomerID);
+END;
+EXEC AddPrimaryKey;
+
+
+CREATE PROCEDURE RemovePrimary
+AS
+BEGIN
+ALTER TABLE Customers
+DROP CONSTRAINT PKCustomerID
+END;
+EXEC RemovePrimary;
+
+
+CREATE PROCEDURE AddUniqueEmail
+AS
+BEGIN
+    ALTER TABLE Customers
+    ADD CONSTRAINT UCEmail UNIQUE (Email);
+END;
+
+EXEC AddUniqueEmail;
+
+CREATE PROCEDURE RemoveUniqueEmail
+AS
+BEGIN
+ALTER TABLE Customers
+DROP CONSTRAINT UCEmail;
+END;
+EXEC RemoveUniqueEmail;
+
+
+CREATE PROCEDURE AddForeignKey
+AS
+BEGIN
+ALTER TABLE Orders
+ADD CONSTRAINT FK_CustomerID FOREIGN KEY (CustomerID) REFERENCES Customers(CustomerID);
+END;
+
+EXEC AddForeignKey;
+
+CREATE PROCEDURE RemoveForeignKey
+AS
+BEGIN
+ALTER TABLE Orders
+DROP CONSTRAINT FK_CustomerID;
+END;
+
+EXEC RemoveForeignKey;
+
+CREATE PROCEDURE CreateNewTabel
+AS
+BEGIN
+CREATE TABLE NewTabel(
+ID INT PRIMARY KEY,
+Name VARCHAR(50) NOT NULL
+);
+END;
+EXEC CreateNewTabel;
+
+CREATE PROCEDURE DropNewTable
+AS
+BEGIN
+DROP TABLE IF EXISTS NewTable;
+END;
+EXEC DropNewTable;
+
+CREATE TABLE SchemaVersion(
+Version INT NOT NULL PRIMARY KEY
+);
+
+INSERT INTO SchemaVersion(Version) VALUES (1);
+
+
+CREATE PROCEDURE UpdateSchemaVersion
+@NewVersion INT
+AS
+BEGIN
+UPDATE SchemaVersion
+SET Version = @NewVersion;
+END;
+EXEC UpdateSchemaVersion;
+
+
+
+
+
+SELECT *FROM Customers;
+SELECT *FROM Products;
+SELECT *FROM Suppliers;
+SELECT *FROM Employees;
+SELECT *FROM Sale;
+SELECT *FROM SaleItems;
+SELECT *FROM GoldInventory;
+SELECT *FROM Orders;
+SELECT *FROM OrderItems;
+SELECT *FROM Payments;
+

@@ -1,0 +1,69 @@
+the other half of the second assignment 
+
+the tables are in the notebook
+
+(this is the common part)
+select Customer.Name
+from customer
+INNER JOIN order
+ON customer.ID = Order.ID
+
+--------------------------------------------------------------------------------------
+(this is the left join)
+
+select customer.Name
+from customer
+LEFT JOIN Order
+ON Customer.id = order.id
+
+// question how do we know the left table and the right table
+
+--------------------------------------------------------------------------------------
+(right join part)
+
+select customer.Name
+from customer
+RIGHT  JOIN Order
+ON customer.id = order.id
+
+--------------------------------------------------------------------------------------
+(full join part)
+
+select customer.Name
+from customer
+FULL JOIN Order
+ON customer.id = order.id
+
+--------------------------------------------------------------------------------------
+(group by part) 
+select customer.name
+from customer
+where customer.id = order.id // if the ids are common get me the customer name
+group by customer.name
+// if the ouput was in the alphabetic order(ascending order) then it will not change the order and then it checks for the duplicate
+
+
+so it wil make the output in an ascending order and no duplicates there is an example on the notebook
+
+
+
+--------------------------------------------------------------------------------------
+(if you dont want it in ascending order)
+
+
+select customer.name
+from customer
+where customer.id = order.id 
+group by customer.name
+order by customer.name Desc // this will make the output in descending order not in ascending order
+
+--------------------------------------------------------------------------------------
+(this is just an example if you run it it will not work )
+select customer.name
+from customer
+where customer.id = order.id
+group by customer.name
+HAVING Customer.age<50
+
+
+
